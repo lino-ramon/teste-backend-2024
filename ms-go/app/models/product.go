@@ -30,6 +30,6 @@ func (p *Product) Validate() error {
 		validation.Field(&validate.Price, validation.Required, validation.Min(0.01), validation.Max(1000000.00)),
 		validation.Field(&validate.Brand, validation.Required),
 		validation.Field(&validate.Description, validation.Required),
-		validation.Field(&validate.Stock, validation.Required),
+		validation.Field(&validate.Stock, validation.Required, validation.Min(0)),
 	)
 }
