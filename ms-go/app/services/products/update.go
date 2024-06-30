@@ -8,18 +8,22 @@ import (
 	"net/http"
 	"time"
 
+	"ms-go/config/logger"
+
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 func Update(data models.Product, isAPI bool) (*models.Product, error) {
-
+	logger.Info("ProductsService - Updating Product")
 	if data.ID == 0 {
+		logger.Error("ProductsService - Missing parameter ID")
 		return nil, &helpers.GenericError{Msg: "Missing parameters", Code: http.StatusUnprocessableEntity}
 	}
 
 	var product models.Product
 
 	if err := db.Connection().FindOne(context.TODO(), bson.M{"id": data.ID}).Decode(&product); err != nil {
+		logger.Error("ProductsService - Product Not Found")
 		return nil, &helpers.GenericError{Msg: "Product Not Found", Code: http.StatusNotFound}
 	}
 
@@ -27,14 +31,18 @@ func Update(data models.Product, isAPI bool) (*models.Product, error) {
 
 	setUpdate(&data, &product)
 
+	logger.Info("ProductsService - Updating Product on MongoDB")
 	if err := db.Connection().FindOneAndUpdate(context.TODO(), bson.M{"id": data.ID}, bson.M{"$set": data}).Decode(&product); err != nil {
+		logger.Error("ProductsService - Error to update product: ", err)
 		return nil, &helpers.GenericError{Msg: err.Error(), Code: http.StatusInternalServerError}
 	}
 
+	logger.Info("ProductsService - Validating Update")
 	if err := db.Connection().FindOne(context.TODO(), bson.M{"id": data.ID}).Decode(&product); err != nil {
+		logger.Error("ProductsService - Product Not Found")
 		return nil, &helpers.GenericError{Msg: "Product Not Found", Code: http.StatusNotFound}
 	}
-
+	logger.Info("ProductsService - Product updated sucessfull")
 	defer db.Disconnect()
 
 	if isAPI {

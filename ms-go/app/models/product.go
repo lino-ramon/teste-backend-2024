@@ -4,21 +4,24 @@ import (
 	"math"
 	"time"
 
+	"ms-go/config/logger"
+
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
 type Product struct {
-	ID          int       `json:"id" 		  bson:"id,omitempty"`
-	Name        string    `json:"name" 		  bson:"name,omitempty"`
-	Brand       string    `json:"brand"       bson:"brand,omitempty"`
-	Price       float64   `json:"price" 	  bson:"price,omitempty"`
+	ID          int       `json:"id" bson:"id,omitempty"`
+	Name        string    `json:"name" bson:"name,omitempty"`
+	Brand       string    `json:"brand" bson:"brand,omitempty"`
+	Price       float64   `json:"price" bson:"price,omitempty"`
 	Description string    `json:"description" bson:"description,omitempty"`
-	Stock       int       `json:"stock" 	  bson:"stock,omitempty"`
-	CreatedAt   time.Time `json:"created_at"  bson:"created_at,omitempty"`
-	UpdatedAt   time.Time `json:"updated_at"  bson:"updated_at,omitempty"`
+	Stock       int       `json:"stock" bson:"stock,omitempty"`
+	CreatedAt   time.Time `json:"created_at" bson:"created_at,omitempty"`
+	UpdatedAt   time.Time `json:"updated_at" bson:"updated_at,omitempty"`
 }
 
 func (p *Product) Validate() error {
+	logger.Info("Models - Validating Product")
 	if p.Price > 0 {
 		p.Price = math.Round(p.Price*100) / 100
 	}
