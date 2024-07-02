@@ -46,6 +46,11 @@ func Create(data models.Product, isAPI bool) (*models.Product, error) {
 	defer db.Disconnect()
 
 	if isAPI {
+		err = helpers.ProduceProductMessage(data)
+		if err != nil {
+			logger.Error("Failed to produce Kafka message:", err)
+			return nil, &helpers.GenericError{Msg: err.Error(), Code: http.StatusInternalServerError}
+		}
 	}
 
 	return &data, nil
