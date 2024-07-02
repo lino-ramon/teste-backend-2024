@@ -4,4 +4,8 @@ export NEW_RELIC_AGENT_ENABLED=false
 export RAILS_ENV=development 
 export RAILS_MAX_THREADS=5
 bundle exec rails db:migrate
-bundle exec puma -C config/puma.rb
+bundle exec puma -C config/puma.rb &
+
+bundle exec karafka server &
+wait -n
+exit $?
