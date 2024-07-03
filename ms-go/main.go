@@ -1,14 +1,19 @@
 package main
 
 import (
-	_ "ms-go/db"
-	"ms-go/router"
 	"ms-go/app/consumers"
 	"ms-go/config/logger"
+	_ "ms-go/db"
+	"ms-go/router"
+)
+
+const (
+	LOG_LEVEL = "debug"
+	LOG_PATH  = "../../logs/product_test.log"
 )
 
 func main() {
-	logger.InitLogger("debug")
+	logger.InitLogger(LOG_LEVEL, LOG_PATH)
 	defer logger.Logger.Sync()
 	// Iniciando Consumers
 	logger.Info("Main - Starting Consumers")
