@@ -2,9 +2,8 @@ package models
 
 import (
 	"math"
-	"time"
-
 	"ms-go/config/logger"
+	"time"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
