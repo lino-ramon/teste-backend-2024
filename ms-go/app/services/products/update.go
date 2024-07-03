@@ -31,6 +31,10 @@ func Update(data models.Product, isAPI bool) (*models.Product, error) {
 
 	setUpdate(&data, &product)
 
+	if err := data.Validate(); err != nil {
+		return nil, &helpers.GenericError{Msg: err.Error(), Code: http.StatusUnprocessableEntity}
+	}
+	
 	logger.Info("ProductsService - Updating Product on MongoDB")
 	if err := db.Connection().FindOneAndUpdate(context.TODO(), bson.M{"id": data.ID}, bson.M{"$set": data}).Decode(&product); err != nil {
 		logger.Error("ProductsService - Error to update product: ", err)
