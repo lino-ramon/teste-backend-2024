@@ -16,7 +16,11 @@ COPY --from=golang /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=golang /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=golang /etc/passwd /etc/passwd
 COPY --from=golang /etc/group /etc/group
+
 ENV TZ=America/Sao_Paulo
+ENV MONGO_HOST=mongodb
+ENV MONGO_DATABASE=teste_backend
+ENV MAIN_COLLECTION=products
 
 COPY --from=golang /server .
 
