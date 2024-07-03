@@ -1,0 +1,20 @@
+one:
+  name: Notebook DELL ASPIRE 5000
+  brand: DELL
+  price: 2750.95
+  description: Notebook Dell para estudos
+  stock: 100
+
+two:
+  name: Samsung S20 FE
+  brand: Samsung
+  price: 1999.99
+  description: Celular Galaxy Samsung S20 FE 120GB 8G RAM 5G
+  stock: 99
+
+three:
+  name: Monitor Samsung
+  brand: Samsung
+  price: 999.99
+  description: Monitor Samsung 24'
+  stock: 98
