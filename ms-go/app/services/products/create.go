@@ -8,12 +8,14 @@ import (
 	"net/http"
 	"time"
 
+	"ms-go/config/logger"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func Create(data models.Product, isAPI bool) (*models.Product, error) {
-
+	logger.Info("ProductsService - Creating Product")
 	if data.ID == 0 {
 		var max models.Product
 
@@ -33,15 +35,22 @@ func Create(data models.Product, isAPI bool) (*models.Product, error) {
 	data.CreatedAt = time.Now()
 	data.UpdatedAt = data.CreatedAt
 
+	logger.Info("ProductsService - Saving Product")
 	_, err := db.Connection().InsertOne(context.TODO(), data)
 
 	if err != nil {
 		return nil, &helpers.GenericError{Msg: err.Error(), Code: http.StatusInternalServerError}
 	}
 
+	logger.Info("ProductsService - Product Saved sucessfull")
 	defer db.Disconnect()
 
 	if isAPI {
+		err = helpers.ProduceProductMessage(data)
+		if err != nil {
+			logger.Error("Failed to produce Kafka message:", err)
+			return nil, &helpers.GenericError{Msg: err.Error(), Code: http.StatusInternalServerError}
+		}
 	}
 
 	return &data, nil

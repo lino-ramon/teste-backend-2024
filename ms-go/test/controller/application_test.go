@@ -2,17 +2,17 @@ package controller
 
 import (
 	"encoding/json"
-	"ms-go/router"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"ms-go/router"
 
 	"github.com/gin-gonic/gin"
 	"github.com/likexian/gokit/assert"
 )
 
 func TestIndexHome(t *testing.T) {
-
 	// Build our expected body
 	body := gin.H{
 		"message": "[ms-go] | Success",
@@ -28,24 +28,15 @@ func TestIndexHome(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	// Assert we encoded correctly,
-
-	// the request gives a 200
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	// Convert the correct object response to a map
-	response := struct {
-		Data struct {
-			Api struct {
-				Status  int    `json:"status"`
-				Message string `json:"message"`
-			} `json:"api"`
-		} `json:"data"`
-	}{}
-
+	var response map[string]interface{}
 	err := json.Unmarshal(w.Body.Bytes(), &response)
+	if err != nil {
+		t.Fatalf("Failed to unmarshal JSON response: %v", err)
+	}
 
 	// Make some assertions on the correctness of the response.
-	assert.Nil(t, err)
-	assert.Equal(t, body["message"], response.Data.Api.Message)
-
+	assert.Equal(t, body["message"], response["message"])
 }
